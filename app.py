@@ -10,16 +10,33 @@ st.markdown("### Demonstration of Credit Scoring Pipeline")
 
 # Sidebar filters
 st.sidebar.header("Filter Users")
-income_filter = st.sidebar.slider("Income Range:", int(data['net_yearly_income'].min()), int(data['net_yearly_income'].max()), (50000, 100000))
 
-sentiment_filter = st.sidebar.slider("Sentiment Score:", 0.0, 1.0, (0.4, 0.8))
+# Handle 'net_yearly_income' filter
+if 'net_yearly_income' in data.columns:
+    income_filter = st.sidebar.slider(
+        "Income Range:",
+        int(data['net_yearly_income'].min()),
+        int(data['net_yearly_income'].max()),
+        (50000, 100000)
+    )
+else:
+    st.error("'net_yearly_income' column is missing in the dataset.")
+    st.stop()
 
-# Filter data
+# Optional: Check if 'Sentiment_Score' exists
+sentiment_filter_applied = False
+if 'Sentiment_Score' in data.columns:
+    sentiment_filter = st.sidebar.slider("Sentiment Score:", 0.0, 1.0, (0.4, 0.8))
+    data = data[
+        (data['Sentiment_Score'] >= sentiment_filter[0]) &
+        (data['Sentiment_Score'] <= sentiment_filter[1])
+    ]
+    sentiment_filter_applied = True
+
+# Filter data for income
 filtered_data = data[
     (data['net_yearly_income'] >= income_filter[0]) &
-    (data['net_yearly_income'] <= income_filter[1]) &
-    (data['Sentiment_Score'] >= sentiment_filter[0]) &
-    (data['Sentiment_Score'] <= sentiment_filter[1])
+    (data['net_yearly_income'] <= income_filter[1])
 ]
 
 # Display data
@@ -35,4 +52,7 @@ else:
 
 # Explanation section
 st.markdown("### Feature Contribution Explanation")
-st.write("Mock explanation for feature contributions to credit scoring (replace with DALEx or similar visualization).")
+if sentiment_filter_applied:
+    st.write("Mock explanation for feature contributions to credit scoring with sentiment analysis.")
+else:
+    st.write("Mock explanation for feature contributions to credit scoring without sentiment analysis.")
