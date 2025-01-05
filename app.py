@@ -16,8 +16,8 @@ sentiment_filter = st.sidebar.slider("Sentiment Score:", 0.0, 1.0, (0.4, 0.8))
 
 # Filter data
 filtered_data = data[
-    (data['Income'] >= income_filter[0]) &
-    (data['Income'] <= income_filter[1]) &
+    (data['net_yearly_income'] >= income_filter[0]) &
+    (data['net_yearly_income'] <= income_filter[1]) &
     (data['Sentiment_Score'] >= sentiment_filter[0]) &
     (data['Sentiment_Score'] <= sentiment_filter[1])
 ]
@@ -27,8 +27,11 @@ st.markdown("### Filtered Data")
 st.write(filtered_data)
 
 # Visualize scoring
-st.markdown("### Credit Score Distribution")
-st.bar_chart(filtered_data['Final_Score'])
+if 'Final_Score' in filtered_data.columns:
+    st.markdown("### Credit Score Distribution")
+    st.bar_chart(filtered_data['Final_Score'])
+else:
+    st.warning("The 'Final_Score' column is missing in the data.")
 
 # Explanation section
 st.markdown("### Feature Contribution Explanation")
