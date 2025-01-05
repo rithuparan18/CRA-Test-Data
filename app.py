@@ -10,7 +10,8 @@ st.markdown("### Demonstration of Credit Scoring Pipeline")
 
 # Sidebar filters
 st.sidebar.header("Filter Users")
-income_filter = st.sidebar.slider("Income Range:", int(data['Income'].min()), int(data['Income'].max()), (50000, 100000))
+income_filter = st.sidebar.slider("Income Range:", int(data['net_yearly_income'].min()), int(data['net_yearly_income'].max()), (50000, 100000))
+
 sentiment_filter = st.sidebar.slider("Sentiment Score:", 0.0, 1.0, (0.4, 0.8))
 
 # Filter data
